@@ -25,13 +25,6 @@ T ArbolBinarioOrd<T>::datoRaiz() {
     return (this->raiz)->obtenerDato();  
 }
 
-/*
-template <class T>
-void ArbolGeneral<T>::fijarRaiz(NodoGeneral<T>* nraiz) {
-    this->raiz = nraiz;
-}
-*/
-
 //PUEDE SER ITERATIVA
 template <class T>
 bool ArbolBinarioOrd<T>::insertar(T val) {
@@ -69,6 +62,52 @@ template <class T>
 bool ArbolBinarioOrd<T>::eliminarNodo(T val) {
     //Comparar con dato en nodo para bajar por izq o der
     //y para saber si val esta en el arbol
+
+    NodoBinario<T>* nodo = this->raiz;                                             
+    NodoBinario<T>* padre = this->raiz;
+    bool eliminado = false;
+    bool encontrado = false;
+    while((nodo != nullptr) && (!encontrado)){
+        padre = nodo;
+        if (val < nodo->obtenerDato()){
+            nodo = nodo->obtenerHijoIzq();
+        }else if (val > nodo->obtenerDato()){
+            nodo = nodo->obtenerHijoDer();
+        }else if (val == nodo->obtenerDato()){
+            encontrado = true;
+            break;
+        }
+    }
+
+    if(encontrado){
+        if(nodo->esHoja())
+            nodo->~NodoBinario();
+        else if (nodo->obtenerHijoIzq()!=nullptr && nodo->obtenerHijoDer()==nullptr ){
+            padre->fijarHijoDer(nodo->obtenerHijoIzq());
+            nodo->~NodoBinario();
+        }
+        else if (nodo->obtenerHijoDer()!=nullptr && nodo->obtenerHijoIzq()==nullptr){
+            padre->fijarHijoDer(nodo->obtenerHijoDer());
+            nodo->~NodoBinario();
+        }
+        else if (nodo->obtenerHijoDer()!=nullptr && nodo->obtenerHijoIzq()!=nullptr){
+            NodoBinario<T>* aux;
+            aux = nodo->obtenerHijoIzq();
+            while(aux->obtenerHijoDer()!=nullptr){
+                aux = aux->obtenerHijoDer();
+            }
+            aux->fijarHijoIzq(nodo->obtenerHijoIzq());
+            aux->fijarHijoDer(nodo->obtenerHijoDer());
+            if(padre->obtenerDato() < val)
+                padre->fijarHijoIzq(aux);
+            else
+                padre->fijarHijoDer(aux);
+            nodo->~NodoBinario();
+            
+        }
+    }
+
+    
 
     /*
         Si val esta en el arbol:
