@@ -2,7 +2,8 @@
 #define __GRAPH_H__
 #include <map>
 #include <utility>
-using namespace std;
+#include <iostream>
+#include <vector>
 
 template <class T>
 class Graph {
@@ -16,8 +17,9 @@ public:
     bool addEdge(T source, T destination, float weight);
     bool deleteNode(T nNode);
     bool deleteEdge(T source, T destination);
-    bool findNode (T nNode);
-    bool findEdge (T source, T destination);
+    bool deleteEdgeAux(T source, T destination);
+    std::pair<bool, typename std::map<T, std::vector<std::pair<T, float>>>::iterator> findNode (T nNode);
+    std::pair<bool, float> findEdge (T source , T destination);
 };
 
 #endif
