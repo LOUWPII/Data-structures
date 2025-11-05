@@ -1,0 +1,32 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Build Grafo Project",
+            "command": "C:/msys64/ucrt64/bin/g++.exe", 
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}/Graph/Graph.cxx", 
+                "${workspaceFolder}/Graph_test.cxx",
+                "-o",
+                "${fileDirname}/test_grafo.exe", // Nombre del ejecutable
+                "-Wall",
+                "-Wextra",
+                "-std=c++17" // Usar un estándar C++ moderno
+            ],
+            "options": {
+                "cwd": "${fileDirname}" // Usar el directorio actual para la salida
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compila archivos Graph.cxx y main.cpp"
+        }
+    ],
+    "version": "2.0.0"
+}
