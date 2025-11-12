@@ -1,12 +1,16 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
+
 // Inclusiones necesarias
 #include <map>
 #include <utility>  // Para std::pair
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <functional> // Para el infinity
+#include <limits>
+#include "Point.h"
 
 template <class T>
 class Graph {
@@ -27,6 +31,8 @@ public:
     void BFS(T startNode);
     void DFS(T startNode); 
     void setDirected(bool directed);
+    std::vector<T> Dijkstra(const T& start, const T& end);
+
 };
 
 #include "Graph.hxx"

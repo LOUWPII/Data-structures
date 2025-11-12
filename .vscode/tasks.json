@@ -7,8 +7,8 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}/Graph/Graph.cxx", 
-                "${workspaceFolder}/Graph_test.cxx",
+                "${workspaceFolder}/Graph/Graph.tpp", 
+                "${workspaceFolder}/Graph/main.cpp",
                 "-o",
                 "${fileDirname}/test_grafo.exe", // Nombre del ejecutable
                 "-Wall",

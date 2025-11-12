@@ -6,7 +6,6 @@
 #include <sstream>
 
 #include "Graph.h"
-#include "Point.h"
 
 // -------------------------------------------------------------------------
 
@@ -125,7 +124,27 @@ int main( int argc, char* argv[] )
     << vertices[ path[ i ] ].Y << " "
     << vertices[ path[ i ] ].Z << std::endl;
   */
+  
+  /*Se pasan a la función de dijkstra el punto de inicio y el punto final
+    Se podrían mandar el start_id y el end_id pero para acceder a los puntos del grafo
+    mediante el índice se tendría que pasar el vector auxiliar lo cual es innecesario 
+  */
+  std::vector<Point> path = graph.Dijkstra(puntos_indice[start_id], puntos_indice[end_id]);
+  //Para poder mostrar los indices y el path:
+  std::cout << path.size( ) << std::endl;
 
+    // Iteramos sobre el vector de Puntos (path) que nos devolvió Dijkstra
+    for( unsigned int i = 0; i < path.size( ); ++i ) {
+        std::vector<Point>::iterator it = std::find(puntos_indice.begin(), puntos_indice.end(), path[i]);
+
+        if (it != puntos_indice.end()) {
+            // Calculamos la distancia (índice) desde el inicio del vector
+            long index = std::distance(puntos_indice.begin(), it);
+
+            // Imprimimos el índice del punto
+            std::cout << index << std::endl; 
+        }
+    }
   return( 0 );
 }
 

@@ -25,4 +25,9 @@ struct Point
         if (Y != other.Y) return Y < other.Y;
         return Z < other.Z;
     }
+
+    bool operator==(const Point& other) const {
+    // Dos puntos son iguales si y solo si sus tres coordenadas son iguales.
+    return (X == other.X && Y == other.Y && Z == other.Z);
+    }
 };

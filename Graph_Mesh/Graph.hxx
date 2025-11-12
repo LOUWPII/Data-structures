@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <limits>
 
 // Constructores y Destructor
 template <class T>
@@ -273,6 +274,103 @@ void Graph<T>::setDirected(bool directed) {
 }
 
 template <class T>
-std::vector<long> Graph<T>::Dijkstra(long start_id, long end_id, const std::vector<Point>& vector_aux_puntos){
+std::vector<T> Graph<T>::Dijkstra(const T& start, const T& end) {
     
+    // 1. INICIALIZACIÓN DE ESTRUCTURAS
+    std::map<T, float> distance;
+    std::map<T, T> predecessor;
+    float infinity = std::numeric_limits<float>::infinity();
+
+    // Utilizamos el iterador para inicializar las distancias
+    typename std::map<T, std::vector<std::pair<T, float>>>::const_iterator adj_it;
+    
+    // Inicializar distancias a infinito para todos los nodos
+    // CORRECCIÓN: Usar adjacency_list
+    for (adj_it = adjacency_list.begin(); adj_it != adjacency_list.end(); ++adj_it) {
+        distance[adj_it->first] = infinity;
+    }
+    distance[start] = 0.0f; // Distancia inicial es cero
+
+    
+    // Pair = (Distancia, Nodo). Usamos std::greater para que la distancia más PEQUEÑA tenga la MÁXIMA prioridad.
+    typedef std::pair<float, T> Pair; 
+    std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> pq; 
+    
+    // Insertamos el nodo de inicio con distancia 0.0f
+    pq.push(Pair(0.0f, start));
+
+    while (!pq.empty()) {
+        
+        // Sacamos el nodo (u) con la distancia más corta 
+        float dist_u = pq.top().first;
+        T u = pq.top().second;
+        pq.pop();
+
+        //Si la distancia obtenida es mayor a la del map de distance para el nodo u, se continua
+        if (dist_u > distance[u]) {
+            continue;
+        }
+
+        // Si el nodo actual es igual al de destino
+        // Asumimos que los operadores < y == están implementados para T (Point)
+        if (!(u < end) && !(end < u)) { 
+            break;
+        }
+
+        // Iterar sobre la lista de adyacencia
+        // CORRECCIÓN: Usar adjacency_list
+        typename std::map<T, std::vector<std::pair<T, float>>>::iterator it = adjacency_list.find(u);
+        if (it != adjacency_list.end()) {
+            // Recorremos el vector de vecinos (it->second es el vector<pair<T, float>>)
+            //const &, ya que se accedera directamente al grafo y no una copia
+            const std::vector<std::pair<T, float>>& neighbors = it->second;
+            typename std::vector<std::pair<T, float>>::const_iterator neighbor_it;
+
+            for (neighbor_it = neighbors.begin(); neighbor_it != neighbors.end(); ++neighbor_it) {
+                
+                // neighbor_it->first es el Nodo Vecino (T)
+                const T& v = neighbor_it->first; 
+                // neighbor_it->second es el Costo de la arista
+                float cost_uv = neighbor_it->second;
+                
+                //La nueva distancia seria el valor de la distancia del map en la clave U + el costo obtenido
+                float new_distance = distance[u] + cost_uv;
+
+                //Si se encuentra un camino más corto
+                if (new_distance < distance[v]) {
+                    distance[v] = new_distance; 
+                    predecessor[v] = u;         
+                    
+                    // Se inserta el vecino con la nueva distancia
+                    pq.push(Pair(new_distance, v));
+                }
+            }
+        }
+    }
+    
+    // Para reconstruir la ruta 
+    std::vector<T> path;
+    // El nodo actual
+    T current = end;
+
+    // Se verifica si se encontró ruta
+    if (distance.find(end) == distance.end() || distance[end] == infinity) {
+        //devuelve el path vacio
+        return path; 
+    }
+    
+    // Rastrear hacia atrás
+    while (true) {
+        path.push_back(current);
+        // Usamos los operadores de comparación. Ya que != no siempre está definido
+        // para tipos complejos, usamos (a < b || b < a)
+        if (!(current < start) && !(start < current)) break; 
+        if (predecessor.find(current) == predecessor.end()) break;
+        current = predecessor[current];
+    }
+    
+    // Invertir la ruta para que vaya de start a end
+    std::reverse(path.begin(), path.end());
+
+    return path;
 }

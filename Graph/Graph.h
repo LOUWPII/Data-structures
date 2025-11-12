@@ -29,6 +29,6 @@ public:
     void setDirected(bool directed);
 };
 
-#include "Graph.tpp"
+#include "Graph.hxx"
 
 #endif
